@@ -1,3 +1,4 @@
+import type { DraggableAttributes } from '@dnd-kit/core'
 import { StampBadge } from '../stamps/StampBadge'
 import { useUIStore } from '../../stores/use-ui-store'
 import type { ProjectStampWithDetails } from '../../../shared/types'
@@ -5,6 +6,11 @@ import type { ProjectStampWithDetails } from '../../../shared/types'
 interface StampItemProps {
   item: ProjectStampWithDetails
   projectId: string
+  /** 拖拽手柄（来自 useSortable），不传则不显示手柄 */
+  dragHandleProps?: {
+    attributes: DraggableAttributes
+    listeners: Record<string, unknown> | undefined
+  }
 }
 
 const statusIndicator: Record<string, string> = {
@@ -19,16 +25,28 @@ const statusStyle: Record<string, string> = {
   completed: 'text-green-400'
 }
 
-export function StampItem({ item, projectId }: StampItemProps) {
+export function StampItem({ item, projectId: _projectId, dragHandleProps }: StampItemProps) {
   const setCompletingStamp = useUIStore((s) => s.setCompletingStamp)
 
   return (
     <div
-      className={`flex items-center gap-2 px-2 py-1.5 rounded-md group ${
+      className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md group ${
         item.status === 'completed' ? 'opacity-60' : 'hover:bg-panel-hover'
       }`}
     >
-      <span className={`text-xs ${statusStyle[item.status]}`}>
+      {dragHandleProps && (
+        <button
+          type="button"
+          className="cursor-grab touch-none text-panel-text-muted hover:text-panel-text shrink-0 active:cursor-grabbing"
+          aria-label="拖动排序"
+          {...dragHandleProps.attributes}
+          {...dragHandleProps.listeners}
+        >
+          ⠿
+        </button>
+      )}
+
+      <span className={`text-xs shrink-0 ${statusStyle[item.status]}`}>
         {statusIndicator[item.status]}
       </span>
 
@@ -42,7 +60,7 @@ export function StampItem({ item, projectId }: StampItemProps) {
 
       {item.status !== 'completed' && (
         <button
-          className="text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm"
+          className="text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm shrink-0"
           onClick={() => setCompletingStamp(item.id)}
           title="标记完成"
         >

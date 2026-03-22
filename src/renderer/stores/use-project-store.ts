@@ -22,6 +22,7 @@ interface ProjectStore {
   fetchProjectStamps: (projectId: string) => Promise<void>
   addStampToProject: (projectId: string, stampId: string) => Promise<void>
   removeStampFromProject: (id: string, projectId: string) => Promise<void>
+  reorderProjectStamps: (projectId: string, orderedProjectStampIds: string[]) => Promise<void>
 
   completeStamp: (input: CreateCommitInput) => Promise<Commit>
   setStampStatus: (
@@ -88,6 +89,16 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
 
   removeStampFromProject: async (id, projectId) => {
     await window.api.projectStamps.remove(id)
+    await get().fetchProjectStamps(projectId)
+    await get().fetchProjects()
+  },
+
+  reorderProjectStamps: async (projectId, orderedProjectStampIds) => {
+    const items = orderedProjectStampIds.map((id, index) => ({
+      id,
+      sort_order: index + 1
+    }))
+    await window.api.projectStamps.reorder(items)
     await get().fetchProjectStamps(projectId)
     await get().fetchProjects()
   },
