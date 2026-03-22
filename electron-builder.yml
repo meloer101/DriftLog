@@ -1,0 +1,22 @@
+appId: com.driftlog.app
+productName: DriftLog
+directories:
+  buildResources: resources
+  output: dist
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.*'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+asarUnpack:
+  - '**/*.node'
+mac:
+  target:
+    - dmg
+  artifactName: ${name}-${version}-mac.${ext}
+  entitlementsInherit: build/entitlements.mac.plist
+  icon: resources/icon.icns
+dmg:
+  artifactName: ${name}-${version}.${ext}
+npmRebuild: true
