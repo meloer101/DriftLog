@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useUIStore } from '../../stores/use-ui-store'
 
 interface PanelShellProps {
@@ -7,6 +8,16 @@ interface PanelShellProps {
 export function PanelShell({ children }: PanelShellProps) {
   const view = useUIStore((s) => s.view)
   const setView = useUIStore((s) => s.setView)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      void window.api.window.hide()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <div className="h-screen flex flex-col bg-panel-bg rounded-xl overflow-hidden border border-panel-border/50 shadow-2xl">

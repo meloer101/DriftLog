@@ -1,9 +1,9 @@
-import { app } from 'electron'
+import { app, globalShortcut } from 'electron'
 import { electronApp } from '@electron-toolkit/utils'
 import { initDatabase } from './database'
 import { registerAllHandlers } from './ipc'
 import { createTray } from './tray'
-import { createPanelWindow, togglePanelWindow } from './window'
+import { createPanelWindow, togglePanelWindow, togglePanelWindowAtDefault } from './window'
 
 app.dock?.hide()
 
@@ -15,6 +15,9 @@ app.whenReady().then(() => {
 
   const panel = createPanelWindow()
   const tray = createTray(() => togglePanelWindow(tray))
+  globalShortcut.register('CommandOrControl+Shift+D', () => {
+    togglePanelWindowAtDefault()
+  })
 
   panel.on('ready-to-show', () => {
     // Window created but hidden — user clicks tray to show
@@ -23,4 +26,8 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   // Menu bar app: keep running even if window is closed
+})
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll()
 })

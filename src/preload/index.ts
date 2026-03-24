@@ -46,6 +46,9 @@ const api = {
       ipcRenderer.invoke(IPC.COMMITS.LIST, projectId),
     create: (input: CreateCommitInput): Promise<Commit> =>
       ipcRenderer.invoke(IPC.COMMITS.CREATE, input)
+  },
+  window: {
+    hide: (): Promise<boolean> => ipcRenderer.invoke(IPC.WINDOW.HIDE)
   }
 }
 

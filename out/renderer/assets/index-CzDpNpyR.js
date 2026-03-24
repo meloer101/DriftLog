@@ -7020,6 +7020,14 @@ const useUIStore = create((set, get) => ({
 function PanelShell({ children }) {
   const view = useUIStore((s) => s.view);
   const setView = useUIStore((s) => s.setView);
+  reactExports.useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      void window.api.window.hide();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-screen flex flex-col bg-panel-bg rounded-xl overflow-hidden border border-panel-border/50 shadow-2xl", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-3 py-2 border-b border-panel-border select-none", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-panel-text tracking-wide", children: "DriftLog" }),

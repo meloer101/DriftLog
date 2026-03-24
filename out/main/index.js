@@ -128,6 +128,9 @@ const IPC = {
   COMMITS: {
     LIST: "commits:list",
     CREATE: "commits:create"
+  },
+  WINDOW: {
+    HIDE: "window:hide"
   }
 };
 function registerStampHandlers() {
@@ -318,36 +321,6 @@ function registerCommitHandlers() {
     return db2.prepare("SELECT * FROM commits WHERE id = ?").get(id);
   });
 }
-function registerAllHandlers() {
-  registerStampHandlers();
-  registerProjectHandlers();
-  registerProjectStampHandlers();
-  registerCommitHandlers();
-}
-let tray = null;
-function createTray(onClick) {
-  const iconPath = path.join(__dirname, "../../resources/iconTemplate.png");
-  let icon;
-  try {
-    icon = electron.nativeImage.createFromPath(iconPath);
-  } catch {
-    icon = electron.nativeImage.createEmpty();
-  }
-  if (icon.isEmpty()) {
-    icon = electron.nativeImage.createFromBuffer(
-      Buffer.from(
-        "iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAMRJREFUOBFjYBhowEgbBv7//88MxExAbATEjEDMBMT/gfg/ED8E4ntAfBeI7wDxXSC+B5IAYjYgZgViNqgYUOwBEN8F4v9QzAzFLFAxi5CQkP9lZWX/gQqYoQqZoYqYoYrAgJmZmQFoCANQjBmqiBkqDwYsUMIClGBhZmYB0ixQMRaoGBjAlDEzMzMD5VmhYqxQMTBggRIsQMzCzMwCpFmgYixQMRaoGBiwQAkWIGZhZmYB0ixQMRaoGMUAAG3wTBPMh+PTAAAAAElFTkSuQmCC",
-        "base64"
-      )
-    );
-    icon = icon.resize({ width: 18, height: 18 });
-  }
-  icon.setTemplateImage(true);
-  tray = new electron.Tray(icon);
-  tray.setToolTip("DriftLog");
-  tray.on("click", onClick);
-  return tray;
-}
 const WINDOW_WIDTH = 380;
 const WINDOW_MAX_HEIGHT = 520;
 let panelWindow = null;
@@ -380,6 +353,12 @@ function createPanelWindow() {
     electron.shell.openExternal(details.url);
     return { action: "deny" };
   });
+  panelWindow.webContents.on("before-input-event", (event, input) => {
+    if (input.type === "keyDown" && input.key === "Escape") {
+      hidePanelWindow();
+      event.preventDefault();
+    }
+  });
   if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
     panelWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   } else {
@@ -395,6 +374,14 @@ function togglePanelWindow(tray2) {
     showPanelWindow(tray2);
   }
 }
+function togglePanelWindowAtDefault() {
+  if (!panelWindow) return;
+  if (panelWindow.isVisible()) {
+    hidePanelWindow();
+  } else {
+    showPanelWindowAtDefault();
+  }
+}
 function showPanelWindow(tray2) {
   if (!panelWindow) return;
   const trayBounds = tray2.getBounds();
@@ -403,10 +390,62 @@ function showPanelWindow(tray2) {
   const y = Math.round(trayBounds.y + trayBounds.height + 4);
   panelWindow.setPosition(x, y);
   panelWindow.show();
+  panelWindow.focus();
+}
+function showPanelWindowAtDefault() {
+  if (!panelWindow) return;
+  const { workArea } = electron.screen.getDisplayNearestPoint(electron.screen.getCursorScreenPoint());
+  const windowBounds = panelWindow.getBounds();
+  const x = Math.round(workArea.x + workArea.width - windowBounds.width - 8);
+  const y = Math.round(workArea.y + 8);
+  panelWindow.setPosition(x, y);
+  panelWindow.show();
+  panelWindow.focus();
 }
 function hidePanelWindow() {
   if (!panelWindow) return;
   panelWindow.hide();
+}
+function getPanelWindow() {
+  return panelWindow;
+}
+function registerWindowHandlers() {
+  electron.ipcMain.handle(IPC.WINDOW.HIDE, () => {
+    const panel = getPanelWindow();
+    panel?.hide();
+    return true;
+  });
+}
+function registerAllHandlers() {
+  registerStampHandlers();
+  registerProjectHandlers();
+  registerProjectStampHandlers();
+  registerCommitHandlers();
+  registerWindowHandlers();
+}
+let tray = null;
+function createTray(onClick) {
+  const iconPath = path.join(__dirname, "../../resources/iconTemplate.png");
+  let icon;
+  try {
+    icon = electron.nativeImage.createFromPath(iconPath);
+  } catch {
+    icon = electron.nativeImage.createEmpty();
+  }
+  if (icon.isEmpty()) {
+    icon = electron.nativeImage.createFromBuffer(
+      Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAMRJREFUOBFjYBhowEgbBv7//88MxExAbATEjEDMBMT/gfg/ED8E4ntAfBeI7wDxXSC+B5IAYjYgZgViNqgYUOwBEN8F4v9QzAzFLFAxi5CQkP9lZWX/gQqYoQqZoYqYoYrAgJmZmQFoCANQjBmqiBkqDwYsUMIClGBhZmYB0ixQMRaoGBjAlDEzMzMD5VmhYqxQMTBggRIsQMzCzMwCpFmgYixQMRaoGBiwQAkWIGZhZmYB0ixQMRaoGMUAAG3wTBPMh+PTAAAAAElFTkSuQmCC",
+        "base64"
+      )
+    );
+    icon = icon.resize({ width: 18, height: 18 });
+  }
+  icon.setTemplateImage(true);
+  tray = new electron.Tray(icon);
+  tray.setToolTip("DriftLog");
+  tray.on("click", onClick);
+  return tray;
 }
 electron.app.dock?.hide();
 electron.app.whenReady().then(() => {
@@ -415,8 +454,14 @@ electron.app.whenReady().then(() => {
   registerAllHandlers();
   const panel = createPanelWindow();
   const tray2 = createTray(() => togglePanelWindow(tray2));
+  electron.globalShortcut.register("CommandOrControl+Shift+D", () => {
+    togglePanelWindowAtDefault();
+  });
   panel.on("ready-to-show", () => {
   });
 });
 electron.app.on("window-all-closed", () => {
+});
+electron.app.on("will-quit", () => {
+  electron.globalShortcut.unregisterAll();
 });

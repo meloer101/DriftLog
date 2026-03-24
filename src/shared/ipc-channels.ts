@@ -23,5 +23,8 @@ export const IPC = {
   COMMITS: {
     LIST: 'commits:list',
     CREATE: 'commits:create'
+  },
+  WINDOW: {
+    HIDE: 'window:hide'
   }
 } as const

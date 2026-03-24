@@ -1,4 +1,4 @@
-import { BrowserWindow, Tray, shell } from 'electron'
+import { BrowserWindow, Tray, screen, shell } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 import { WINDOW_WIDTH, WINDOW_MAX_HEIGHT } from '../shared/constants'
@@ -57,6 +57,16 @@ export function togglePanelWindow(tray: Tray): void {
   }
 }
 
+export function togglePanelWindowAtDefault(): void {
+  if (!panelWindow) return
+
+  if (panelWindow.isVisible()) {
+    hidePanelWindow()
+  } else {
+    showPanelWindowAtDefault()
+  }
+}
+
 function showPanelWindow(tray: Tray): void {
   if (!panelWindow) return
 
@@ -65,6 +75,18 @@ function showPanelWindow(tray: Tray): void {
 
   const x = Math.round(trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2)
   const y = Math.round(trayBounds.y + trayBounds.height + 4)
+
+  panelWindow.setPosition(x, y)
+  panelWindow.show()
+}
+
+function showPanelWindowAtDefault(): void {
+  if (!panelWindow) return
+
+  const { workArea } = screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
+  const windowBounds = panelWindow.getBounds()
+  const x = Math.round(workArea.x + workArea.width - windowBounds.width - 8)
+  const y = Math.round(workArea.y + 8)
 
   panelWindow.setPosition(x, y)
   panelWindow.show()

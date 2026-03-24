@@ -24,6 +24,9 @@ const IPC = {
   COMMITS: {
     LIST: "commits:list",
     CREATE: "commits:create"
+  },
+  WINDOW: {
+    HIDE: "window:hide"
   }
 };
 const api = {
@@ -50,6 +53,9 @@ const api = {
   commits: {
     list: (projectId) => electron.ipcRenderer.invoke(IPC.COMMITS.LIST, projectId),
     create: (input) => electron.ipcRenderer.invoke(IPC.COMMITS.CREATE, input)
+  },
+  window: {
+    hide: () => electron.ipcRenderer.invoke(IPC.WINDOW.HIDE)
   }
 };
 electron.contextBridge.exposeInMainWorld("api", api);
