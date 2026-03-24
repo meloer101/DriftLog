@@ -12,6 +12,7 @@ export function CreateStampForm() {
   const [saving, setSaving] = useState(false)
   const createStamp = useStampStore((s) => s.createStamp)
   const goBack = useUIStore((s) => s.goBack)
+  const setView = useUIStore((s) => s.setView)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,7 +20,7 @@ export function CreateStampForm() {
     setSaving(true)
     await createStamp({ name: name.trim(), color })
     setSaving(false)
-    goBack()
+    setView('stamps')
   }
 
   return (
