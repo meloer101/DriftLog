@@ -11287,6 +11287,28 @@ function CommitDialog({ projectStampId, projectId, stampName }) {
     ] })
   ] }) });
 }
+const DEFAULT_STAMP_COLORS = [
+  "#6366f1",
+  // indigo
+  "#8b5cf6",
+  // violet
+  "#ec4899",
+  // pink
+  "#f43f5e",
+  // rose
+  "#f97316",
+  // orange
+  "#eab308",
+  // yellow
+  "#22c55e",
+  // green
+  "#14b8a6",
+  // teal
+  "#06b6d4",
+  // cyan
+  "#3b82f6"
+  // blue
+];
 const useStampStore = create((set, get) => ({
   stampMap: {},
   loading: false,
@@ -11332,10 +11354,38 @@ const useStampStore = create((set, get) => ({
     }
   }
 }));
+function ColorPicker({ value, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: DEFAULT_STAMP_COLORS.map((color) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "button",
+    {
+      type: "button",
+      className: `w-6 h-6 rounded-full border-2 glass-transition hover:scale-110 ${value === color ? "border-white scale-110" : "border-transparent"}`,
+      style: { backgroundColor: color },
+      onClick: () => onChange(color)
+    },
+    color
+  )) });
+}
+const Input = reactExports.forwardRef(
+  ({ className = "", ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "input",
+    {
+      ref,
+      className: `w-full glass-input px-4 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:outline-none glass-transition ${className}`,
+      ...props
+    }
+  )
+);
+Input.displayName = "Input";
 function AddStampPopover({ projectId }) {
   const [open, setOpen] = reactExports.useState(false);
+  const [creating, setCreating] = reactExports.useState(false);
+  const [newName, setNewName] = reactExports.useState("");
+  const [newColor, setNewColor] = reactExports.useState(DEFAULT_STAMP_COLORS[0]);
+  const [savingCreate, setSavingCreate] = reactExports.useState(false);
   const stamps = useStampStore((s) => s.stamps)();
   const fetchStamps = useStampStore((s) => s.fetchStamps);
+  const createStamp = useStampStore((s) => s.createStamp);
   const projectStamps = useProjectStore((s) => s.projectStampsMap[projectId]) ?? [];
   const addStampToProject = useProjectStore((s) => s.addStampToProject);
   const usedStampIds = reactExports.useMemo(() => new Set(projectStamps.map((ps) => ps.stamp_id)), [projectStamps]);
@@ -11351,6 +11401,17 @@ function AddStampPopover({ projectId }) {
   const handlePick = async (stampId) => {
     await addStampToProject(projectId, stampId);
   };
+  const handleCreateAndAdd = async () => {
+    if (!newName.trim()) return;
+    setSavingCreate(true);
+    const created = await createStamp({ name: newName.trim(), color: newColor });
+    await addStampToProject(projectId, created.id);
+    await fetchStamps();
+    setNewName("");
+    setNewColor(DEFAULT_STAMP_COLORS[0]);
+    setCreating(false);
+    setSavingCreate(false);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 pt-2 border-t border-panel-border", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button,
@@ -11363,19 +11424,69 @@ function AddStampPopover({ projectId }) {
         children: open ? "− 收起" : "+ 添加便签"
       }
     ),
-    open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 solid-glass-sheet p-2 max-h-36 overflow-y-auto", children: available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted text-center py-2", children: stamps.length === 0 ? "请先在「便签」页创建便签" : "所有便签已加入本项目" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        type: "button",
-        className: "w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left hover:bg-panel-hover glass-transition active:scale-[0.97]",
-        onClick: () => void handlePick(stamp.id),
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-panel-text-muted", children: "+" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(StampBadge, { name: stamp.name, color: stamp.color })
-        ]
-      },
-      stamp.id
-    )) }) })
+    open && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 solid-glass-sheet p-2 max-h-36 overflow-y-auto", children: [
+      available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted text-center py-2", children: stamps.length === 0 ? "请先在「便签」页创建便签" : "所有便签已加入本项目" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          className: "w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left hover:bg-panel-hover glass-transition active:scale-[0.97]",
+          onClick: () => void handlePick(stamp.id),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-panel-text-muted", children: "+" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(StampBadge, { name: stamp.name, color: stamp.color })
+          ]
+        },
+        stamp.id
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 pt-2 border-t border-panel-border", children: !creating ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          type: "button",
+          variant: "ghost",
+          size: "sm",
+          className: "w-full justify-center text-panel-text-muted hover:text-panel-text",
+          onClick: () => setCreating(true),
+          children: "+ 创建新便签"
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            value: newName,
+            onChange: (e) => setNewName(e.target.value),
+            placeholder: "新便签名称",
+            className: "px-3 py-1.5 text-xs"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ColorPicker, { value: newColor, onChange: setNewColor }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "button",
+              variant: "ghost",
+              size: "sm",
+              onClick: () => {
+                setCreating(false);
+                setNewName("");
+                setNewColor(DEFAULT_STAMP_COLORS[0]);
+              },
+              children: "取消"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "button",
+              size: "sm",
+              disabled: !newName.trim() || savingCreate,
+              onClick: () => void handleCreateAndAdd(),
+              children: savingCreate ? "创建中..." : "确认创建"
+            }
+          )
+        ] })
+      ] }) })
+    ] })
   ] });
 }
 function SortableProjectStampRow({
@@ -11513,17 +11624,6 @@ function ProjectList() {
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: projects.map((project) => /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectCard, { project }, project.id)) })
   ] });
 }
-const Input = reactExports.forwardRef(
-  ({ className = "", ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "input",
-    {
-      ref,
-      className: `w-full glass-input px-4 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:outline-none glass-transition ${className}`,
-      ...props
-    }
-  )
-);
-Input.displayName = "Input";
 function SortableSelectedRow({
   stampId,
   stamp,
@@ -11571,8 +11671,13 @@ function SortableSelectedRow({
   );
 }
 function StampPicker({ selected, onChange }) {
+  const [creating, setCreating] = reactExports.useState(false);
+  const [newName, setNewName] = reactExports.useState("");
+  const [newColor, setNewColor] = reactExports.useState(DEFAULT_STAMP_COLORS[0]);
+  const [savingCreate, setSavingCreate] = reactExports.useState(false);
   const stamps = useStampStore((s) => s.stamps)();
   const fetchStamps = useStampStore((s) => s.fetchStamps);
+  const createStamp = useStampStore((s) => s.createStamp);
   const stampById = reactExports.useMemo(() => {
     const m2 = {};
     stamps.forEach((s) => {
@@ -11605,9 +11710,17 @@ function StampPicker({ selected, onChange }) {
   const removeFromSelection = (id2) => {
     onChange(selected.filter((s) => s !== id2));
   };
-  if (stamps.length === 0) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "请先创建便签" });
-  }
+  const handleCreateInline = async () => {
+    if (!newName.trim()) return;
+    setSavingCreate(true);
+    const created = await createStamp({ name: newName.trim(), color: newColor });
+    await fetchStamps();
+    onChange([...selected, created.id]);
+    setNewName("");
+    setNewColor(DEFAULT_STAMP_COLORS[0]);
+    setCreating(false);
+    setSavingCreate(false);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 max-h-56 overflow-y-auto pr-2", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-2", children: "已选顺序（可拖动）" }),
@@ -11623,7 +11736,7 @@ function StampPicker({ selected, onChange }) {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-2", children: "便签库（点击添加）" }),
-      available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "已全部加入或无可选便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      stamps.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "暂无便签，可直接在下方创建" }) : available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "已全部加入或无可选便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
           type: "button",
@@ -11635,7 +11748,55 @@ function StampPicker({ selected, onChange }) {
           ]
         },
         stamp.id
-      )) })
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 pt-2 border-t border-panel-border", children: !creating ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          type: "button",
+          variant: "ghost",
+          size: "sm",
+          className: "w-full justify-center text-panel-text-muted hover:text-panel-text",
+          onClick: () => setCreating(true),
+          children: "+ 创建新便签"
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            value: newName,
+            onChange: (e) => setNewName(e.target.value),
+            placeholder: "新便签名称",
+            className: "px-3 py-1.5 text-xs"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ColorPicker, { value: newColor, onChange: setNewColor }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "button",
+              variant: "ghost",
+              size: "sm",
+              onClick: () => {
+                setCreating(false);
+                setNewName("");
+                setNewColor(DEFAULT_STAMP_COLORS[0]);
+              },
+              children: "取消"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "button",
+              size: "sm",
+              disabled: !newName.trim() || savingCreate,
+              onClick: () => void handleCreateInline(),
+              children: savingCreate ? "创建中..." : "确认创建"
+            }
+          )
+        ] })
+      ] }) })
     ] })
   ] });
 }
@@ -11724,40 +11885,6 @@ function StampLibrary() {
       stamp.id
     )) })
   ] });
-}
-const DEFAULT_STAMP_COLORS = [
-  "#6366f1",
-  // indigo
-  "#8b5cf6",
-  // violet
-  "#ec4899",
-  // pink
-  "#f43f5e",
-  // rose
-  "#f97316",
-  // orange
-  "#eab308",
-  // yellow
-  "#22c55e",
-  // green
-  "#14b8a6",
-  // teal
-  "#06b6d4",
-  // cyan
-  "#3b82f6"
-  // blue
-];
-function ColorPicker({ value, onChange }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: DEFAULT_STAMP_COLORS.map((color) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "button",
-    {
-      type: "button",
-      className: `w-6 h-6 rounded-full border-2 glass-transition hover:scale-110 ${value === color ? "border-white scale-110" : "border-transparent"}`,
-      style: { backgroundColor: color },
-      onClick: () => onChange(color)
-    },
-    color
-  )) });
 }
 function CreateStampForm() {
   const [name, setName] = reactExports.useState("");

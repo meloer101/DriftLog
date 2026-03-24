@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -16,8 +16,12 @@ import {
   verticalListSortingStrategy
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { DEFAULT_STAMP_COLORS } from '../../../shared/constants'
 import { useStampStore } from '../../stores/use-stamp-store'
 import type { Stamp } from '../../../shared/types'
+import { Button } from '../ui/Button'
+import { ColorPicker } from '../ui/ColorPicker'
+import { Input } from '../ui/Input'
 import { StampBadge } from './StampBadge'
 
 interface StampPickerProps {
@@ -76,8 +80,13 @@ function SortableSelectedRow({
 }
 
 export function StampPicker({ selected, onChange }: StampPickerProps) {
+  const [creating, setCreating] = useState(false)
+  const [newName, setNewName] = useState('')
+  const [newColor, setNewColor] = useState(DEFAULT_STAMP_COLORS[0])
+  const [savingCreate, setSavingCreate] = useState(false)
   const stamps = useStampStore((s) => s.stamps)()
   const fetchStamps = useStampStore((s) => s.fetchStamps)
+  const createStamp = useStampStore((s) => s.createStamp)
 
   const stampById = useMemo(() => {
     const m: Record<string, Stamp> = {}
@@ -118,8 +127,16 @@ export function StampPicker({ selected, onChange }: StampPickerProps) {
     onChange(selected.filter((s) => s !== id))
   }
 
-  if (stamps.length === 0) {
-    return <div className="text-xs text-panel-text-muted py-2">请先创建便签</div>
+  const handleCreateInline = async () => {
+    if (!newName.trim()) return
+    setSavingCreate(true)
+    const created = await createStamp({ name: newName.trim(), color: newColor })
+    await fetchStamps()
+    onChange([...selected, created.id])
+    setNewName('')
+    setNewColor(DEFAULT_STAMP_COLORS[0])
+    setCreating(false)
+    setSavingCreate(false)
   }
 
   return (
@@ -148,7 +165,9 @@ export function StampPicker({ selected, onChange }: StampPickerProps) {
 
       <div>
         <div className="text-[10px] text-panel-text-muted mb-2">便签库（点击添加）</div>
-        {available.length === 0 ? (
+        {stamps.length === 0 ? (
+          <div className="text-xs text-panel-text-muted py-2">暂无便签，可直接在下方创建</div>
+        ) : available.length === 0 ? (
           <div className="text-xs text-panel-text-muted py-2">已全部加入或无可选便签</div>
         ) : (
           <div className="space-y-2">
@@ -165,6 +184,52 @@ export function StampPicker({ selected, onChange }: StampPickerProps) {
             ))}
           </div>
         )}
+
+        <div className="mt-2 pt-2 border-t border-panel-border">
+          {!creating ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="w-full justify-center text-panel-text-muted hover:text-panel-text"
+              onClick={() => setCreating(true)}
+            >
+              + 创建新便签
+            </Button>
+          ) : (
+            <div className="space-y-2">
+              <Input
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="新便签名称"
+                className="px-3 py-1.5 text-xs"
+              />
+              <ColorPicker value={newColor} onChange={setNewColor} />
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setCreating(false)
+                    setNewName('')
+                    setNewColor(DEFAULT_STAMP_COLORS[0])
+                  }}
+                >
+                  取消
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={!newName.trim() || savingCreate}
+                  onClick={() => void handleCreateInline()}
+                >
+                  {savingCreate ? '创建中...' : '确认创建'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
