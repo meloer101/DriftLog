@@ -59,8 +59,9 @@ export const useStampStore = create<StampStore>((set, get) => ({
 
     try {
       await window.api.stamps.delete(id)
-    } catch {
+    } catch (error) {
       if (prev) set((state) => ({ stampMap: { ...state.stampMap, [id]: prev } }))
+      throw error
     }
   }
 }))

@@ -19,7 +19,7 @@ export function StampLibrary() {
     try {
       await deleteStamp(id)
     } catch {
-      alert('无法删除正在使用的便签')
+      alert('该便签正在被项目使用，请先从项目中移除后再删除。')
     }
     setDeletingId(null)
   }
