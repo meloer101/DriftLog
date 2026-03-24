@@ -9,9 +9,9 @@ export function ProgressBar({ total, completed, className = '' }: ProgressBarPro
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <div className="flex-1 h-1.5 rounded-full bg-panel-border overflow-hidden">
+      <div className="flex-1 h-1.5 rounded-full bg-panel-track overflow-hidden">
         <div
-          className="h-full rounded-full bg-panel-accent transition-all duration-300"
+          className="h-full rounded-full bg-panel-fill glass-transition"
           style={{ width: `${percent}%` }}
         />
       </div>

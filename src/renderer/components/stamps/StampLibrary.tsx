@@ -25,9 +25,9 @@ export function StampLibrary() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-panel-text">便签库</h2>
+        <h2 className="text-sm font-semibold text-panel-text tracking-[-0.3px]">便签库</h2>
         <Button size="sm" onClick={() => setView('create-stamp')}>
           + 新建
         </Button>
@@ -38,14 +38,14 @@ export function StampLibrary() {
           还没有便签，点击「+ 新建」创建第一个
         </div>
       ) : (
-        <div className="space-y-1">
+        <div className="space-y-2">
           {stamps.map((stamp) => (
             <div
               key={stamp.id}
-              className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-panel-hover group"
+              className="flex items-center justify-between py-2 px-2 rounded-[12px] hover:bg-panel-hover glass-transition group"
             >
-              <StampBadge name={stamp.name} color={stamp.color} />
-              {deletingId === stamp.id ? (
+                <StampBadge name={stamp.name} color={stamp.color} />
+                {deletingId === stamp.id ? (
                 <div className="flex gap-1">
                   <Button size="sm" variant="danger" onClick={() => handleDelete(stamp.id)}>
                     确认
@@ -54,13 +54,13 @@ export function StampLibrary() {
                     取消
                   </Button>
                 </div>
-              ) : (
-                <button
-                  className="text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs"
+                ) : (
+                  <button
+                  className="text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 glass-transition text-xs"
                   onClick={() => setDeletingId(stamp.id)}
-                >
-                  删除
-                </button>
+                  >
+                    删除
+                  </button>
               )}
             </div>
           ))}

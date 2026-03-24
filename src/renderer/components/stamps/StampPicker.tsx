@@ -50,7 +50,7 @@ function SortableSelectedRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-1.5 px-2 py-1.5 rounded-md bg-panel-accent/10 border border-panel-accent/30"
+      className="flex items-center gap-2 px-2 py-2 glass-chip"
     >
       <button
         type="button"
@@ -123,15 +123,15 @@ export function StampPicker({ selected, onChange }: StampPickerProps) {
   }
 
   return (
-    <div className="space-y-3 max-h-56 overflow-y-auto pr-0.5">
+    <div className="space-y-4 max-h-56 overflow-y-auto pr-2">
       <div>
-        <div className="text-[10px] text-panel-text-muted mb-1.5">已选顺序（可拖动）</div>
+        <div className="text-[10px] text-panel-text-muted mb-2">已选顺序（可拖动）</div>
         {selected.length === 0 ? (
-          <div className="text-xs text-panel-text-muted py-1 px-1">未选择便签，可从下方添加</div>
+          <div className="text-xs text-panel-text-muted py-2 px-2">未选择便签，可从下方添加</div>
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={selected} strategy={verticalListSortingStrategy}>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {selected.map((id) => (
                   <SortableSelectedRow
                     key={id}
@@ -147,16 +147,16 @@ export function StampPicker({ selected, onChange }: StampPickerProps) {
       </div>
 
       <div>
-        <div className="text-[10px] text-panel-text-muted mb-1.5">便签库（点击添加）</div>
+        <div className="text-[10px] text-panel-text-muted mb-2">便签库（点击添加）</div>
         {available.length === 0 ? (
-          <div className="text-xs text-panel-text-muted py-1">已全部加入或无可选便签</div>
+          <div className="text-xs text-panel-text-muted py-2">已全部加入或无可选便签</div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-2">
             {available.map((stamp) => (
               <button
                 key={stamp.id}
                 type="button"
-                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left transition-colors hover:bg-panel-hover border border-transparent"
+                className="w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left glass-transition hover:bg-panel-hover border border-transparent active:scale-[0.97]"
                 onClick={() => addToSelection(stamp.id)}
               >
                 <span className="text-xs text-panel-text-muted">+</span>

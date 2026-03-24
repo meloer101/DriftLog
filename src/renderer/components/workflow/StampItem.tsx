@@ -32,7 +32,7 @@ export function StampItem({ item, projectId, dragHandleProps }: StampItemProps) 
 
   return (
     <div
-      className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md group ${
+      className={`flex items-center gap-2 px-2 py-2 rounded-[12px] group glass-transition ${
         item.status === 'completed' ? 'opacity-60' : 'hover:bg-panel-hover'
       }`}
     >
@@ -63,7 +63,7 @@ export function StampItem({ item, projectId, dragHandleProps }: StampItemProps) 
       {item.status !== 'completed' && (
         <button
           type="button"
-          className="text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm shrink-0"
+          className="text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 glass-transition text-sm shrink-0"
           onClick={() => setCompletingStamp(item.id)}
           title="标记完成"
         >
@@ -73,7 +73,7 @@ export function StampItem({ item, projectId, dragHandleProps }: StampItemProps) 
 
       <button
         type="button"
-        className="text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs shrink-0"
+        className="text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 glass-transition text-xs shrink-0"
         onClick={() => void removeStampFromProject(item.id, projectId)}
         title="从项目中移除"
       >

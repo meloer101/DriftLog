@@ -33,7 +33,7 @@ export function AddStampPopover({ projectId }: AddStampPopoverProps) {
   }
 
   return (
-    <div className="mt-2 pt-2 border-t border-panel-border/60">
+    <div className="mt-2 pt-2 border-t border-panel-border">
       <Button
         type="button"
         variant="ghost"
@@ -45,7 +45,7 @@ export function AddStampPopover({ projectId }: AddStampPopoverProps) {
       </Button>
 
       {open && (
-        <div className="mt-2 rounded-md border border-panel-border bg-panel-bg/50 p-2 max-h-36 overflow-y-auto">
+        <div className="mt-2 solid-glass-sheet p-2 max-h-36 overflow-y-auto">
           {available.length === 0 ? (
             <div className="text-[10px] text-panel-text-muted text-center py-2">
               {stamps.length === 0 ? '请先在「便签」页创建便签' : '所有便签已加入本项目'}
@@ -56,10 +56,10 @@ export function AddStampPopover({ projectId }: AddStampPopoverProps) {
                 <button
                   key={stamp.id}
                   type="button"
-                  className="w-full flex items-center gap-2 px-2 py-1 rounded-md text-left hover:bg-panel-hover transition-colors"
+                  className="w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left hover:bg-panel-hover glass-transition active:scale-[0.97]"
                   onClick={() => void handlePick(stamp.id)}
                 >
-                  <span className="text-[10px] text-panel-accent">+</span>
+                  <span className="text-[10px] text-panel-text-muted">+</span>
                   <StampBadge name={stamp.name} color={stamp.color} />
                 </button>
               ))}

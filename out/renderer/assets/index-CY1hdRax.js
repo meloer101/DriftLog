@@ -7028,14 +7028,14 @@ function PanelShell({ children }) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-screen flex flex-col bg-panel-bg rounded-xl overflow-hidden border border-panel-border/50 shadow-2xl", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-3 py-2 border-b border-panel-border select-none", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-panel-text tracking-wide", children: "DriftLog" }),
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-screen flex flex-col glass-panel overflow-hidden px-0 relative", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-4 py-2 border-b border-panel-border select-none", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-panel-text tracking-[-0.3px]", children: "DriftLog" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
-            className: `px-2 py-0.5 rounded text-xs transition-colors ${view === "projects" || view === "create-project" ? "bg-panel-accent/20 text-panel-accent" : "text-panel-text-muted hover:text-panel-text"}`,
+            className: `px-2 py-2 rounded-[12px] text-xs glass-transition active:scale-[0.97] ${view === "projects" || view === "create-project" ? "bg-panel-hover text-panel-text" : "text-panel-text-muted hover:bg-panel-hover hover:text-panel-text"}`,
             onClick: () => setView("projects"),
             children: "项目"
           }
@@ -7043,14 +7043,15 @@ function PanelShell({ children }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
-            className: `px-2 py-0.5 rounded text-xs transition-colors ${view === "stamps" || view === "create-stamp" ? "bg-panel-accent/20 text-panel-accent" : "text-panel-text-muted hover:text-panel-text"}`,
+            className: `px-2 py-2 rounded-[12px] text-xs glass-transition active:scale-[0.97] ${view === "stamps" || view === "create-stamp" ? "bg-panel-hover text-panel-text" : "text-panel-text-muted hover:bg-panel-hover hover:text-panel-text"}`,
             onClick: () => setView("stamps"),
             children: "便签"
           }
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-3 py-3", children })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-4 py-4", children }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "dialog-root", className: "absolute inset-0 pointer-events-none z-50" })
   ] });
 }
 const useProjectStore = create((set, get) => ({
@@ -7128,10 +7129,10 @@ const useProjectStore = create((set, get) => ({
 function ProgressBar({ total, completed, className = "" }) {
   const percent = total === 0 ? 0 : Math.round(completed / total * 100);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `flex items-center gap-2 ${className}`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-1.5 rounded-full bg-panel-border overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-1.5 rounded-full bg-panel-track overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
-        className: "h-full rounded-full bg-panel-accent transition-all duration-300",
+        className: "h-full rounded-full bg-panel-fill glass-transition",
         style: { width: `${percent}%` }
       }
     ) }),
@@ -11106,12 +11107,11 @@ function isAfter(a, b) {
   return a.data.current.sortable.index < b.data.current.sortable.index;
 }
 function Badge({ color, children, size = "sm", className = "" }) {
-  const sizeClasses2 = size === "sm" ? "text-xs px-1.5 py-0.5" : "text-sm px-2 py-1";
+  const sizeClasses2 = size === "sm" ? "text-xs px-2 py-2" : "text-sm px-4 py-2";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "span",
     {
-      className: `inline-flex items-center gap-1 rounded-md font-medium ${sizeClasses2} ${className}`,
-      style: { backgroundColor: `${color}20`, color },
+      className: `inline-flex items-center gap-1 glass-badge font-medium text-panel-text ${sizeClasses2} ${className}`,
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-1.5 h-1.5 rounded-full", style: { backgroundColor: color } }),
         children
@@ -11138,7 +11138,7 @@ function StampItem({ item, projectId, dragHandleProps }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
-      className: `flex items-center gap-1.5 px-2 py-1.5 rounded-md group ${item.status === "completed" ? "opacity-60" : "hover:bg-panel-hover"}`,
+      className: `flex items-center gap-2 px-2 py-2 rounded-[12px] group glass-transition ${item.status === "completed" ? "opacity-60" : "hover:bg-panel-hover"}`,
       children: [
         dragHandleProps && /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
@@ -11164,7 +11164,7 @@ function StampItem({ item, projectId, dragHandleProps }) {
           "button",
           {
             type: "button",
-            className: "text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm shrink-0",
+            className: "text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 glass-transition text-sm shrink-0",
             onClick: () => setCompletingStamp(item.id),
             title: "标记完成",
             children: "✅"
@@ -11174,7 +11174,7 @@ function StampItem({ item, projectId, dragHandleProps }) {
           "button",
           {
             type: "button",
-            className: "text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs shrink-0",
+            className: "text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 glass-transition text-xs shrink-0",
             onClick: () => void removeStampFromProject(item.id, projectId),
             title: "从项目中移除",
             children: "✕"
@@ -11186,6 +11186,10 @@ function StampItem({ item, projectId, dragHandleProps }) {
 }
 function Dialog({ open, onClose, title, children }) {
   const overlayRef = reactExports.useRef(null);
+  const [mounted, setMounted] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    setMounted(true);
+  }, []);
   reactExports.useEffect(() => {
     if (!open) return;
     const handleKey = (e) => {
@@ -11194,47 +11198,53 @@ function Dialog({ open, onClose, title, children }) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
-  if (!open) return null;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      ref: overlayRef,
-      className: "absolute inset-0 z-50 flex items-start justify-center bg-black/40 pt-12 animate-fade-in",
-      onClick: (e) => {
-        if (e.target === overlayRef.current) onClose();
-      },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[340px] rounded-lg bg-panel-surface border border-panel-border shadow-2xl animate-slide-down", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-4 py-3 border-b border-panel-border", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text", children: title }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: onClose,
-              className: "text-panel-text-muted hover:text-panel-text transition-colors text-lg leading-none",
-              children: "×"
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4", children })
-      ] })
-    }
+  if (!open || !mounted) return null;
+  const dialogRoot = document.getElementById("dialog-root");
+  if (!dialogRoot) return null;
+  return reactDomExports.createPortal(
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: overlayRef,
+        className: "dialog-overlay absolute inset-0 pointer-events-auto z-50 flex items-start justify-center pt-12 animate-fade-in",
+        onClick: (e) => {
+          if (e.target === overlayRef.current) onClose();
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[340px] solid-glass-sheet animate-slide-down overflow-hidden", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-4 py-2 border-b border-panel-border", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text tracking-[-0.3px]", children: title }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: onClose,
+                className: "text-panel-text-muted hover:text-panel-text glass-transition text-lg leading-none",
+                children: "×"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4", children })
+        ] })
+      }
+    ),
+    dialogRoot
   );
 }
 const variantClasses = {
-  primary: "bg-panel-accent hover:bg-panel-accent-hover text-white",
-  ghost: "bg-transparent hover:bg-panel-hover text-panel-text",
-  danger: "bg-transparent hover:bg-red-500/20 text-red-400"
+  primary: "text-panel-text hover:bg-panel-hover",
+  ghost: "text-panel-text hover:bg-panel-hover",
+  danger: "text-red-400 hover:bg-panel-hover"
 };
 const sizeClasses = {
-  sm: "px-2 py-1 text-xs",
-  md: "px-3 py-1.5 text-sm"
+  sm: "px-2 py-2 text-xs",
+  md: "px-4 py-2 text-sm"
 };
 const Button = reactExports.forwardRef(
   ({ variant = "primary", size = "md", className = "", children, ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       ref,
-      className: `rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`,
+      className: `glass-chip rounded-[12px] font-medium glass-transition active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`,
       ...props,
       children
     }
@@ -11256,13 +11266,13 @@ function CommitDialog({ projectStampId, projectId, stampName }) {
     setSaving(false);
     setCompletingStamp(null);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: true, title: `完成：${stampName}`, onClose: () => setCompletingStamp(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: true, title: `完成：${stampName}`, onClose: () => setCompletingStamp(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-1.5", children: "备注（可选）" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-2", children: "备注（可选）" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "textarea",
         {
-          className: "w-full rounded-md border border-panel-border bg-panel-bg px-3 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:border-panel-accent focus:outline-none transition-colors resize-none",
+          className: "w-full glass-input px-4 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:outline-none glass-transition resize-none",
           rows: 3,
           value: note,
           onChange: (e) => setNote(e.target.value),
@@ -11341,7 +11351,7 @@ function AddStampPopover({ projectId }) {
   const handlePick = async (stampId) => {
     await addStampToProject(projectId, stampId);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 pt-2 border-t border-panel-border/60", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 pt-2 border-t border-panel-border", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button,
       {
@@ -11353,14 +11363,14 @@ function AddStampPopover({ projectId }) {
         children: open ? "− 收起" : "+ 添加便签"
       }
     ),
-    open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 rounded-md border border-panel-border bg-panel-bg/50 p-2 max-h-36 overflow-y-auto", children: available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted text-center py-2", children: stamps.length === 0 ? "请先在「便签」页创建便签" : "所有便签已加入本项目" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 solid-glass-sheet p-2 max-h-36 overflow-y-auto", children: available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted text-center py-2", children: stamps.length === 0 ? "请先在「便签」页创建便签" : "所有便签已加入本项目" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "button",
       {
         type: "button",
-        className: "w-full flex items-center gap-2 px-2 py-1 rounded-md text-left hover:bg-panel-hover transition-colors",
+        className: "w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left hover:bg-panel-hover glass-transition active:scale-[0.97]",
         onClick: () => void handlePick(stamp.id),
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-panel-accent", children: "+" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-panel-text-muted", children: "+" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(StampBadge, { name: stamp.name, color: stamp.color })
         ]
       },
@@ -11413,7 +11423,7 @@ function ProjectDetail({ projectId }) {
     void reorderProjectStamps(projectId, nextOrder);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-slide-down", children: [
-    stamps.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2 px-2", children: "暂无便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SortableContext, { items: sortableIds, strategy: verticalListSortingStrategy, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-0.5", children: stamps.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(SortableProjectStampRow, { item, projectId }, item.id)) }) }) }),
+    stamps.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2 px-2", children: "暂无便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SortableContext, { items: sortableIds, strategy: verticalListSortingStrategy, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: stamps.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(SortableProjectStampRow, { item, projectId }, item.id)) }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AddStampPopover, { projectId }),
     completingStamp && /* @__PURE__ */ jsxRuntimeExports.jsx(
       CommitDialog,
@@ -11447,24 +11457,24 @@ function ProjectCard({ project }) {
     }
     void deleteProject(project.id);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg border border-panel-border bg-panel-surface overflow-hidden", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "glass-card overflow-hidden", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         role: "button",
         tabIndex: 0,
-        className: "w-full text-left px-3 py-2.5 hover:bg-panel-hover transition-colors cursor-pointer group",
+        className: "w-full text-left px-4 py-2 hover:bg-panel-hover glass-transition cursor-pointer group active:scale-[0.99]",
         onClick: handleHeaderClick,
         onKeyDown: handleHeaderKeyDown,
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-panel-text truncate", children: project.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 ml-2 shrink-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-panel-text tracking-[-0.2px] truncate", children: project.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 ml-2 shrink-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
                 {
                   type: "button",
-                  className: "opacity-0 group-hover:opacity-100 text-panel-text-muted hover:text-red-400 transition-all text-xs",
+                  className: "opacity-0 group-hover:opacity-100 text-panel-text-muted hover:text-red-400 glass-transition text-xs",
                   onClick: handleDelete,
                   title: "删除项目",
                   children: "🗑"
@@ -11474,7 +11484,7 @@ function ProjectCard({ project }) {
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { total: project.total_stamps, completed: project.completed_stamps }),
-          project.current_stamp && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1.5 text-xs text-panel-text-muted truncate", children: [
+          project.current_stamp && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 text-xs text-panel-text-muted truncate", children: [
             "进行中: ",
             project.current_stamp
           ] })
@@ -11492,13 +11502,13 @@ function ProjectList() {
   reactExports.useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text", children: "项目" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text tracking-[-0.3px]", children: "项目" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: () => setView("create-project"), children: "+ 新建" })
     ] }),
     loading && projects.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-8 text-panel-text-muted text-xs", children: "加载中..." }) : projects.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center py-8", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-panel-text-muted text-xs mb-3", children: "还没有项目" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-panel-text-muted text-xs mb-2", children: "还没有项目" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: () => setView("create-project"), children: "创建第一个项目" })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: projects.map((project) => /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectCard, { project }, project.id)) })
   ] });
@@ -11508,7 +11518,7 @@ const Input = reactExports.forwardRef(
     "input",
     {
       ref,
-      className: `w-full rounded-md border border-panel-border bg-panel-bg px-3 py-1.5 text-sm text-panel-text placeholder:text-panel-text-muted focus:border-panel-accent focus:outline-none transition-colors ${className}`,
+      className: `w-full glass-input px-4 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:outline-none glass-transition ${className}`,
       ...props
     }
   )
@@ -11533,7 +11543,7 @@ function SortableSelectedRow({
     {
       ref: setNodeRef,
       style,
-      className: "flex items-center gap-1.5 px-2 py-1.5 rounded-md bg-panel-accent/10 border border-panel-accent/30",
+      className: "flex items-center gap-2 px-2 py-2 glass-chip",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
@@ -11598,10 +11608,10 @@ function StampPicker({ selected, onChange }) {
   if (stamps.length === 0) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "请先创建便签" });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 max-h-56 overflow-y-auto pr-0.5", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 max-h-56 overflow-y-auto pr-2", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-1.5", children: "已选顺序（可拖动）" }),
-      selected.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-1 px-1", children: "未选择便签，可从下方添加" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SortableContext, { items: selected, strategy: verticalListSortingStrategy, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: selected.map((id2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-2", children: "已选顺序（可拖动）" }),
+      selected.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2 px-2", children: "未选择便签，可从下方添加" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DndContext, { sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SortableContext, { items: selected, strategy: verticalListSortingStrategy, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: selected.map((id2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         SortableSelectedRow,
         {
           stampId: id2,
@@ -11612,12 +11622,12 @@ function StampPicker({ selected, onChange }) {
       )) }) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-1.5", children: "便签库（点击添加）" }),
-      available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-1", children: "已全部加入或无可选便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] text-panel-text-muted mb-2", children: "便签库（点击添加）" }),
+      available.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-panel-text-muted py-2", children: "已全部加入或无可选便签" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: available.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
           type: "button",
-          className: "w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left transition-colors hover:bg-panel-hover border border-transparent",
+          className: "w-full flex items-center gap-2 px-2 py-2 rounded-[12px] text-left glass-transition hover:bg-panel-hover border border-transparent active:scale-[0.97]",
           onClick: () => addToSelection(stamp.id),
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-panel-text-muted", children: "+" }),
@@ -11645,7 +11655,7 @@ function CreateProjectForm() {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-1.5", children: "项目名称" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-2", children: "项目名称" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Input,
         {
@@ -11657,14 +11667,14 @@ function CreateProjectForm() {
       )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block text-xs text-panel-text-muted mb-1.5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "block text-xs text-panel-text-muted mb-2", children: [
         "选择便签 (",
         selectedStamps.length,
         " 已选)"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(StampPicker, { selected: selectedStamps, onChange: setSelectedStamps })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "ghost", size: "sm", onClick: goBack, children: "取消" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", size: "sm", disabled: !name.trim() || saving, children: saving ? "创建中..." : "创建项目" })
     ] })
@@ -11687,15 +11697,15 @@ function StampLibrary() {
     }
     setDeletingId(null);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text", children: "便签库" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-panel-text tracking-[-0.3px]", children: "便签库" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: () => setView("create-stamp"), children: "+ 新建" })
     ] }),
-    stamps.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-8 text-panel-text-muted text-xs", children: "还没有便签，点击「+ 新建」创建第一个" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: stamps.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    stamps.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-8 text-panel-text-muted text-xs", children: "还没有便签，点击「+ 新建」创建第一个" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: stamps.map((stamp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
-        className: "flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-panel-hover group",
+        className: "flex items-center justify-between py-2 px-2 rounded-[12px] hover:bg-panel-hover glass-transition group",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(StampBadge, { name: stamp.name, color: stamp.color }),
           deletingId === stamp.id ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
@@ -11704,7 +11714,7 @@ function StampLibrary() {
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              className: "text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs",
+              className: "text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 glass-transition text-xs",
               onClick: () => setDeletingId(stamp.id),
               children: "删除"
             }
@@ -11738,11 +11748,11 @@ const DEFAULT_STAMP_COLORS = [
   // blue
 ];
 function ColorPicker({ value, onChange }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5", children: DEFAULT_STAMP_COLORS.map((color) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: DEFAULT_STAMP_COLORS.map((color) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       type: "button",
-      className: `w-6 h-6 rounded-full border-2 transition-transform hover:scale-110 ${value === color ? "border-white scale-110" : "border-transparent"}`,
+      className: `w-6 h-6 rounded-full border-2 glass-transition hover:scale-110 ${value === color ? "border-white scale-110" : "border-transparent"}`,
       style: { backgroundColor: color },
       onClick: () => onChange(color)
     },
@@ -11765,7 +11775,7 @@ function CreateStampForm() {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-1.5", children: "便签名称" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-2", children: "便签名称" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Input,
         {
@@ -11777,10 +11787,10 @@ function CreateStampForm() {
       )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-1.5", children: "颜色" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs text-panel-text-muted mb-2", children: "颜色" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(ColorPicker, { value: color, onChange: setColor })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "ghost", size: "sm", onClick: goBack, children: "取消" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "submit", size: "sm", disabled: !name.trim() || saving, children: saving ? "创建中..." : "创建便签" })
     ] })

@@ -18,11 +18,151 @@ body,
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    sans-serif;
+  font-family: -apple-system, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+  letter-spacing: -0.2px;
+  color: rgb(var(--panel-text));
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --panel-bg: rgba(255, 255, 255, 0.12);
+    --panel-bg-fallback: rgba(255, 255, 255, 0.22);
+    --panel-surface: rgba(255, 255, 255, 0.08);
+    --panel-surface-fallback: rgba(255, 255, 255, 0.18);
+    --panel-popover: rgba(255, 255, 255, 0.16);
+    --panel-popover-fallback: rgba(255, 255, 255, 0.28);
+    --panel-hover: rgba(255, 255, 255, 0.14);
+    --panel-border: rgba(255, 255, 255, 0.2);
+    --panel-text: 28 28 30;
+    --panel-text-muted: 60 60 67;
+    --panel-track: rgba(0, 0, 0, 0.08);
+    --panel-fill: rgba(0, 0, 0, 0.45);
+    --panel-accent: 90 90 94;
+    --panel-accent-hover: 110 110 114;
+    --panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.12);
+    --panel-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.1);
+    --panel-radius-sm: 12px;
+    --panel-radius-md: 18px;
+    --panel-radius-lg: 22px;
+    --sheet-bg: rgba(242, 242, 247, 0.97);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --panel-bg: rgba(28, 28, 30, 0.75);
+      --panel-bg-fallback: rgba(28, 28, 30, 0.88);
+      --panel-surface: rgba(28, 28, 30, 0.6);
+      --panel-surface-fallback: rgba(28, 28, 30, 0.78);
+      --panel-popover: rgba(28, 28, 30, 0.7);
+      --panel-popover-fallback: rgba(28, 28, 30, 0.85);
+      --panel-hover: rgba(255, 255, 255, 0.12);
+      --panel-border: rgba(255, 255, 255, 0.2);
+      --panel-text: 255 255 255;
+      --panel-text-muted: 235 235 245;
+      --panel-track: rgba(255, 255, 255, 0.18);
+      --panel-fill: rgba(255, 255, 255, 0.75);
+      --panel-accent: 200 200 205;
+      --panel-accent-hover: 220 220 225;
+      --sheet-bg: rgba(44, 44, 46, 0.97);
+    }
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--panel-shadow);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--panel-radius-md);
+  }
+
+  .glass-card {
+    background: var(--panel-surface);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--panel-shadow-soft);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--panel-radius-md);
+  }
+
+  /**
+   * 不透明玻璃：Dialog / Sheet / 下拉等与底层面板叠加时使用，禁止 backdrop-filter 避免双层模糊
+   */
+  .solid-glass-sheet {
+    background: var(--sheet-bg);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.12),
+      0 8px 32px rgba(0, 0, 0, 0.24),
+      0 2px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 20px;
+  }
+
+  /**
+   * 弹窗遮罩：仅在此层使用轻微 blur，不在弹窗本体上使用
+   */
+  .dialog-overlay {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .glass-input {
+    background: var(--panel-surface);
+    border: 1px solid var(--panel-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: var(--panel-radius-sm);
+  }
+
+  .glass-input:focus {
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-chip {
+    background: var(--panel-surface);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius-sm);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .glass-badge {
+    background: var(--panel-surface);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius-sm);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .glass-transition {
+    transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-panel {
+    background: var(--panel-bg-fallback);
+  }
+
+  .glass-card,
+  .glass-input,
+  .glass-chip,
+  .glass-badge {
+    background: var(--panel-surface-fallback);
+  }
+
 }
 
 ::-webkit-scrollbar {
@@ -34,10 +174,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
-  border-radius: 2px;
+  background: rgba(60, 60, 67, 0.3);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: rgba(60, 60, 67, 0.45);
 }

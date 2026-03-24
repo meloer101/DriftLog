@@ -353,12 +353,6 @@ function createPanelWindow() {
     electron.shell.openExternal(details.url);
     return { action: "deny" };
   });
-  panelWindow.webContents.on("before-input-event", (event, input) => {
-    if (input.type === "keyDown" && input.key === "Escape") {
-      hidePanelWindow();
-      event.preventDefault();
-    }
-  });
   if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
     panelWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   } else {
@@ -390,7 +384,6 @@ function showPanelWindow(tray2) {
   const y = Math.round(trayBounds.y + trayBounds.height + 4);
   panelWindow.setPosition(x, y);
   panelWindow.show();
-  panelWindow.focus();
 }
 function showPanelWindowAtDefault() {
   if (!panelWindow) return;
@@ -400,7 +393,6 @@ function showPanelWindowAtDefault() {
   const y = Math.round(workArea.y + 8);
   panelWindow.setPosition(x, y);
   panelWindow.show();
-  panelWindow.focus();
 }
 function hidePanelWindow() {
   if (!panelWindow) return;

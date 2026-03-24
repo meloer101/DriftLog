@@ -91,7 +91,7 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={sortableIds} strategy={verticalListSortingStrategy}>
-            <div className="space-y-0.5">
+            <div className="space-y-2">
               {stamps.map((item) => (
                 <SortableProjectStampRow key={item.id} item={item} projectId={projectId} />
               ))}

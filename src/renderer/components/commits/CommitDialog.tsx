@@ -29,11 +29,11 @@ export function CommitDialog({ projectStampId, projectId, stampName }: CommitDia
 
   return (
     <Dialog open title={`完成：${stampName}`} onClose={() => setCompletingStamp(null)}>
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div>
-          <label className="block text-xs text-panel-text-muted mb-1.5">备注（可选）</label>
+          <label className="block text-xs text-panel-text-muted mb-2">备注（可选）</label>
           <textarea
-            className="w-full rounded-md border border-panel-border bg-panel-bg px-3 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:border-panel-accent focus:outline-none transition-colors resize-none"
+            className="w-full glass-input px-4 py-2 text-sm text-panel-text placeholder:text-panel-text-muted focus:outline-none glass-transition resize-none"
             rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}

@@ -25,7 +25,7 @@ export function CreateStampForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-xs text-panel-text-muted mb-1.5">便签名称</label>
+        <label className="block text-xs text-panel-text-muted mb-2">便签名称</label>
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -34,10 +34,10 @@ export function CreateStampForm() {
         />
       </div>
       <div>
-        <label className="block text-xs text-panel-text-muted mb-1.5">颜色</label>
+        <label className="block text-xs text-panel-text-muted mb-2">颜色</label>
         <ColorPicker value={color} onChange={setColor} />
       </div>
-      <div className="flex gap-2 pt-1">
+      <div className="flex gap-2 pt-2">
         <Button type="button" variant="ghost" size="sm" onClick={goBack}>
           取消
         </Button>

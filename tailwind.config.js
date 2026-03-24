@@ -5,14 +5,17 @@ module.exports = {
     extend: {
       colors: {
         panel: {
-          bg: '#1a1a2e',
-          surface: '#16213e',
-          hover: '#0f3460',
-          border: '#1f3a5f',
-          accent: '#6366f1',
-          'accent-hover': '#818cf8',
-          text: '#e2e8f0',
-          'text-muted': '#94a3b8'
+          bg: 'var(--panel-bg)',
+          surface: 'var(--panel-surface)',
+          popover: 'var(--panel-popover)',
+          hover: 'var(--panel-hover)',
+          border: 'var(--panel-border)',
+          track: 'var(--panel-track)',
+          fill: 'var(--panel-fill)',
+          accent: 'rgb(var(--panel-accent) / <alpha-value>)',
+          'accent-hover': 'rgb(var(--panel-accent-hover) / <alpha-value>)',
+          text: 'rgb(var(--panel-text) / <alpha-value>)',
+          'text-muted': 'rgb(var(--panel-text-muted) / <alpha-value>)'
         }
       },
       animation: {
