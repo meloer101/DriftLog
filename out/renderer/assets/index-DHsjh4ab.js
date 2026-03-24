@@ -11124,8 +11124,9 @@ const statusStyle = {
   in_progress: "text-yellow-400",
   completed: "text-green-400"
 };
-function StampItem({ item, projectId: _projectId, dragHandleProps }) {
+function StampItem({ item, projectId, dragHandleProps }) {
   const setCompletingStamp = useUIStore((s) => s.setCompletingStamp);
+  const removeStampFromProject = useProjectStore((s) => s.removeStampFromProject);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -11154,10 +11155,21 @@ function StampItem({ item, projectId: _projectId, dragHandleProps }) {
         item.status !== "completed" && /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
+            type: "button",
             className: "text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm shrink-0",
             onClick: () => setCompletingStamp(item.id),
             title: "标记完成",
             children: "✅"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            className: "text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs shrink-0",
+            onClick: () => void removeStampFromProject(item.id, projectId),
+            title: "从项目中移除",
+            children: "✕"
           }
         )
       ]
@@ -11408,17 +11420,50 @@ function ProjectDetail({ projectId }) {
 function ProjectCard({ project }) {
   const expandedProjectId = useUIStore((s) => s.expandedProjectId);
   const toggleProject = useUIStore((s) => s.toggleProject);
+  const deleteProject = useProjectStore((s) => s.deleteProject);
   const isExpanded = expandedProjectId === project.id;
+  const handleHeaderClick = () => {
+    toggleProject(project.id);
+  };
+  const handleHeaderKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleProject(project.id);
+    }
+  };
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (!window.confirm("确认删除项目？此操作不可撤销")) return;
+    if (isExpanded) {
+      toggleProject(project.id);
+    }
+    void deleteProject(project.id);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg border border-panel-border bg-panel-surface overflow-hidden", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
+      "div",
       {
-        className: "w-full text-left px-3 py-2.5 hover:bg-panel-hover transition-colors",
-        onClick: () => toggleProject(project.id),
+        role: "button",
+        tabIndex: 0,
+        className: "w-full text-left px-3 py-2.5 hover:bg-panel-hover transition-colors cursor-pointer group",
+        onClick: handleHeaderClick,
+        onKeyDown: handleHeaderKeyDown,
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-panel-text truncate", children: project.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-panel-text-muted ml-2", children: isExpanded ? "▾" : "▸" })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 ml-2 shrink-0", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  className: "opacity-0 group-hover:opacity-100 text-panel-text-muted hover:text-red-400 transition-all text-xs",
+                  onClick: handleDelete,
+                  title: "删除项目",
+                  children: "🗑"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-panel-text-muted", children: isExpanded ? "▾" : "▸" })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { total: project.total_stamps, completed: project.completed_stamps }),
           project.current_stamp && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1.5 text-xs text-panel-text-muted truncate", children: [

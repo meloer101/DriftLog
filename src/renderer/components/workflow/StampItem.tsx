@@ -1,5 +1,6 @@
 import type { DraggableAttributes } from '@dnd-kit/core'
 import { StampBadge } from '../stamps/StampBadge'
+import { useProjectStore } from '../../stores/use-project-store'
 import { useUIStore } from '../../stores/use-ui-store'
 import type { ProjectStampWithDetails } from '../../../shared/types'
 
@@ -25,8 +26,9 @@ const statusStyle: Record<string, string> = {
   completed: 'text-green-400'
 }
 
-export function StampItem({ item, projectId: _projectId, dragHandleProps }: StampItemProps) {
+export function StampItem({ item, projectId, dragHandleProps }: StampItemProps) {
   const setCompletingStamp = useUIStore((s) => s.setCompletingStamp)
+  const removeStampFromProject = useProjectStore((s) => s.removeStampFromProject)
 
   return (
     <div
@@ -60,6 +62,7 @@ export function StampItem({ item, projectId: _projectId, dragHandleProps }: Stam
 
       {item.status !== 'completed' && (
         <button
+          type="button"
           className="text-green-400 hover:text-green-300 opacity-0 group-hover:opacity-100 transition-all text-sm shrink-0"
           onClick={() => setCompletingStamp(item.id)}
           title="标记完成"
@@ -67,6 +70,15 @@ export function StampItem({ item, projectId: _projectId, dragHandleProps }: Stam
           ✅
         </button>
       )}
+
+      <button
+        type="button"
+        className="text-panel-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all text-xs shrink-0"
+        onClick={() => void removeStampFromProject(item.id, projectId)}
+        title="从项目中移除"
+      >
+        ✕
+      </button>
     </div>
   )
 }
