@@ -1,14 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useProjectStore } from '../../stores/use-project-store'
 import { useUIStore } from '../../stores/use-ui-store'
 import { ProjectCard } from './ProjectCard'
 import { Button } from '../ui/Button'
 
 export function ProjectList() {
-  const projects = useProjectStore((s) => s.projects)()
+  const projectMap = useProjectStore((s) => s.projectMap)
   const fetchProjects = useProjectStore((s) => s.fetchProjects)
   const loading = useProjectStore((s) => s.loading)
   const setView = useUIStore((s) => s.setView)
+  const projects = useMemo(
+    () => Object.values(projectMap).sort((a, b) => a.sort_order - b.sort_order),
+    [projectMap]
+  )
 
   useEffect(() => {
     fetchProjects()

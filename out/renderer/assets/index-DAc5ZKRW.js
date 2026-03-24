@@ -11606,10 +11606,14 @@ function ProjectCard({ project }) {
   ] });
 }
 function ProjectList() {
-  const projects = useProjectStore((s) => s.projects)();
+  const projectMap = useProjectStore((s) => s.projectMap);
   const fetchProjects = useProjectStore((s) => s.fetchProjects);
   const loading = useProjectStore((s) => s.loading);
   const setView = useUIStore((s) => s.setView);
+  const projects = reactExports.useMemo(
+    () => Object.values(projectMap).sort((a, b) => a.sort_order - b.sort_order),
+    [projectMap]
+  );
   reactExports.useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
