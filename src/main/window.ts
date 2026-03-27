@@ -4,6 +4,7 @@ import { is } from '@electron-toolkit/utils'
 import { WINDOW_WIDTH, WINDOW_MAX_HEIGHT } from '../shared/constants'
 
 let panelWindow: BrowserWindow | null = null
+let desktopWindow: BrowserWindow | null = null
 
 export function createPanelWindow(): BrowserWindow {
   panelWindow = new BrowserWindow({
@@ -99,4 +100,52 @@ function hidePanelWindow(): void {
 
 export function getPanelWindow(): BrowserWindow | null {
   return panelWindow
+}
+
+export function createDesktopWindow(): BrowserWindow {
+  desktopWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    minWidth: 800,
+    minHeight: 600,
+    show: false,
+    titleBarStyle: 'hiddenInset',
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    }
+  })
+
+  desktopWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url)
+    return { action: 'deny' }
+  })
+
+  desktopWindow.on('closed', () => {
+    desktopWindow = null
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    desktopWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/desktop.html`)
+  } else {
+    desktopWindow.loadFile(join(__dirname, '../renderer/desktop.html'))
+  }
+
+  desktopWindow.once('ready-to-show', () => {
+    desktopWindow?.show()
+  })
+
+  return desktopWindow
+}
+
+export function openDesktopWindow(): void {
+  if (desktopWindow && !desktopWindow.isDestroyed()) {
+    desktopWindow.focus()
+  } else {
+    createDesktopWindow()
+  }
+}
+
+export function getDesktopWindow(): BrowserWindow | null {
+  return desktopWindow
 }

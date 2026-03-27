@@ -12,6 +12,14 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin({ exclude: ['nanoid'] })]
   },
   renderer: {
+    build: {
+      rollupOptions: {
+        input: {
+          index: resolve('src/renderer/index.html'),
+          desktop: resolve('src/renderer/desktop.html')
+        }
+      }
+    },
     resolve: {
       alias: {
         '@': resolve('src/renderer'),

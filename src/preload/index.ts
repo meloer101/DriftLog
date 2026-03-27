@@ -48,7 +48,8 @@ const api = {
       ipcRenderer.invoke(IPC.COMMITS.CREATE, input)
   },
   window: {
-    hide: (): Promise<boolean> => ipcRenderer.invoke(IPC.WINDOW.HIDE)
+    hide: (): Promise<boolean> => ipcRenderer.invoke(IPC.WINDOW.HIDE),
+    openDesktop: (): Promise<boolean> => ipcRenderer.invoke(IPC.WINDOW.OPEN_DESKTOP)
   }
 }
 

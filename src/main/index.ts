@@ -3,7 +3,7 @@ import { electronApp } from '@electron-toolkit/utils'
 import { initDatabase } from './database'
 import { registerAllHandlers } from './ipc'
 import { createTray } from './tray'
-import { createPanelWindow, togglePanelWindow, togglePanelWindowAtDefault } from './window'
+import { createPanelWindow, togglePanelWindow, togglePanelWindowAtDefault, openDesktopWindow } from './window'
 
 app.dock?.hide()
 
@@ -17,6 +17,10 @@ app.whenReady().then(() => {
   const tray = createTray(() => togglePanelWindow(tray))
   globalShortcut.register('CommandOrControl+Shift+D', () => {
     togglePanelWindowAtDefault()
+  })
+
+  globalShortcut.register('CommandOrControl+Shift+O', () => {
+    openDesktopWindow()
   })
 
   panel.on('ready-to-show', () => {

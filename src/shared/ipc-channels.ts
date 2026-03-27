@@ -25,6 +25,7 @@ export const IPC = {
     CREATE: 'commits:create'
   },
   WINDOW: {
-    HIDE: 'window:hide'
+    HIDE: 'window:hide',
+    OPEN_DESKTOP: 'window:open-desktop'
   }
 } as const
